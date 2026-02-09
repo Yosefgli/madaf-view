@@ -167,6 +167,10 @@
               <th>שם מוצר</th>
               <th>עמודה</th>
               <th>מדף</th>
+<<<<<<< codex/create-real-time-google-sheets-viewer-qw1sxg
+=======
+              <th>סטטוס</th>
+>>>>>>> main
             </tr>
           </thead>
           <tbody id="data-body"></tbody>
@@ -179,7 +183,11 @@
     </div>
 
     <script>
+<<<<<<< codex/create-real-time-google-sheets-viewer-qw1sxg
       const SCRIPT_URL = "PASTE_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+=======
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw797avhe__9es0yYFUE605uGdj6SV0i4yPMPwPVY1aqr931zBby0amBfnnst9gP2xk/exec";
+>>>>>>> main
       const REFRESH_INTERVAL_MS = 60 * 1000;
 
       const elements = {
@@ -215,11 +223,21 @@
 
         rows.forEach((row) => {
           const tr = document.createElement("tr");
+<<<<<<< codex/create-real-time-google-sheets-viewer-qw1sxg
           [row.barcode, row.productName, row.column, row.shelf].forEach((value) => {
             const td = document.createElement("td");
             td.textContent = value ?? "-";
             tr.appendChild(td);
           });
+=======
+          [row.barcode, row.productName, row.column, row.shelf, row.status].forEach(
+            (value) => {
+              const td = document.createElement("td");
+              td.textContent = value ?? "-";
+              tr.appendChild(td);
+            }
+          );
+>>>>>>> main
           elements.body.appendChild(tr);
         });
       };
