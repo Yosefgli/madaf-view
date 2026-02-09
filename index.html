@@ -215,13 +215,11 @@
 
         rows.forEach((row) => {
           const tr = document.createElement("tr");
-          [row.barcode, row.productName, row.column, row.shelf, row.status].forEach(
-            (value) => {
-              const td = document.createElement("td");
-              td.textContent = value ?? "-";
-              tr.appendChild(td);
-            }
-          );
+          [row.barcode, row.productName, row.column, row.shelf].forEach((value) => {
+            const td = document.createElement("td");
+            td.textContent = value ?? "-";
+            tr.appendChild(td);
+          });
           elements.body.appendChild(tr);
         });
       };
