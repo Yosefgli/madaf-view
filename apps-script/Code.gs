@@ -40,7 +40,6 @@ function doGet() {
         productName: row[headerIndex["שם מוצר"]] ?? "",
         column: row[headerIndex["עמודה"]] ?? "",
         shelf: row[headerIndex["מדף"]] ?? "",
-        status,
         isActive: isActiveStatus(status),
       };
     })
@@ -50,7 +49,6 @@ function doGet() {
       productName: item.productName,
       column: item.column,
       shelf: item.shelf,
-      status: item.status,
     }));
 
   return jsonResponse({ items });
