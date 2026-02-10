@@ -97,14 +97,24 @@
         letter-spacing: 0.02em;
         color: #7b86a1;
         text-transform: uppercase;
-        padding-bottom: 12px;
+        padding: 0 12px 12px;
         border-bottom: 1px solid #edf0f7;
+        border-left: 1px solid #eceff5;
+      }
+
+      thead th:last-child {
+        border-left: none;
       }
 
       tbody td {
-        padding: 14px 0;
+        padding: 14px 12px;
         border-bottom: 1px solid #f1f3f8;
+        border-left: 1px solid #f0f2f8;
         font-size: 15px;
+      }
+
+      tbody td:last-child {
+        border-left: none;
       }
 
       tbody tr:last-child td {

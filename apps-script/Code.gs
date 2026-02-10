@@ -42,19 +42,22 @@ function doGet() {
   const items = data
     .slice(1)
     .map((row) => {
-      const inventoryValue = String(row[headerIndex["Inventory"]] ?? "").trim();
-      const checklistValue = String(row[headerIndex["Checklist"]] ?? "").trim();
+      const inventoryRaw = row[headerIndex["Inventory"]];
+      const checklistRaw = row[headerIndex["Checklist"]];
+
       return {
         barcode: row[headerIndex["Barcode"]] ?? "",
         productName: row[headerIndex["ProductName"]] ?? "",
         qty: row[headerIndex["Qty"]] ?? "",
         shelf: row[headerIndex["Shelf"]] ?? "",
         warehouseBin: row[headerIndex["WarehouseBin"]] ?? "",
-        isChecklistEmpty: checklistValue === "",
-        isInventoryFalse: isInventoryValueFalse(inventoryValue),
+        shouldShowByChecklist: isChecklistVisible(checklistRaw),
+        shouldIgnoreByInventory: isInventoryEmpty(inventoryRaw),
+        isInventoryFalse: isInventoryValueFalse(inventoryRaw),
       };
     })
-    .filter((item) => item.isChecklistEmpty)
+    .filter((item) => item.shouldShowByChecklist)
+    .filter((item) => !item.shouldIgnoreByInventory)
     .map((item) => ({
       barcode: item.barcode,
       productName: item.productName,
@@ -67,8 +70,17 @@ function doGet() {
   return jsonResponse({ items });
 }
 
+function isChecklistVisible(value) {
+  const normalized = String(value ?? "").trim().toLowerCase();
+  return normalized === "" || normalized === "false";
+}
+
+function isInventoryEmpty(value) {
+  return String(value ?? "").trim() === "";
+}
+
 function isInventoryValueFalse(value) {
-  return String(value).trim().toLowerCase() === "false";
+  return String(value ?? "").trim().toLowerCase() === "false";
 }
 
 function jsonResponse(payload) {
