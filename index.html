@@ -111,6 +111,20 @@
         border-bottom: none;
       }
 
+      .row-alert td {
+        background: #ffebee;
+      }
+
+      .row-alert td:first-child {
+        border-top-right-radius: 12px;
+        border-bottom-right-radius: 12px;
+      }
+
+      .row-alert td:last-child {
+        border-top-left-radius: 12px;
+        border-bottom-left-radius: 12px;
+      }
+
       .empty-state,
       .error-state {
         padding: 40px 10px;
@@ -151,7 +165,7 @@
   <body>
     <div class="container">
       <header>
-        <h1>תצוגת מילוי מדף בזמן אמת</h1>
+        <h1>TaskLines - תצוגה בזמן אמת</h1>
         <div class="subtitle">המידע נטען אוטומטית בכל דקה מגוגל שיטס.</div>
         <div class="controls">
           <div class="status-pill" id="last-updated">ממתין לטעינה...</div>
@@ -163,10 +177,11 @@
         <table aria-label="טבלת מילוי מדף">
           <thead>
             <tr>
-              <th>ברקוד</th>
-              <th>שם מוצר</th>
-              <th>עמודה</th>
-              <th>מדף</th>
+              <th>Barcode</th>
+              <th>Product Name</th>
+              <th>Qty</th>
+              <th>Shelf</th>
+              <th>Warehouse Bin</th>
             </tr>
           </thead>
           <tbody id="data-body"></tbody>
@@ -179,7 +194,7 @@
     </div>
 
     <script>
-      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw797avhe__9es0yYFUE605uGdj6SV0i4yPMPwPVY1aqr931zBby0amBfnnst9gP2xk/exec";
+      const SCRIPT_URL = "PASTE_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
       const REFRESH_INTERVAL_MS = 60 * 1000;
 
       const elements = {
@@ -215,11 +230,16 @@
 
         rows.forEach((row) => {
           const tr = document.createElement("tr");
-          [row.barcode, row.productName, row.column, row.shelf].forEach((value) => {
-            const td = document.createElement("td");
-            td.textContent = value ?? "-";
-            tr.appendChild(td);
-          });
+          if (row.inventoryFlag === "FALSE") {
+            tr.classList.add("row-alert");
+          }
+          [row.barcode, row.productName, row.qty, row.shelf, row.warehouseBin].forEach(
+            (value) => {
+              const td = document.createElement("td");
+              td.textContent = value ?? "-";
+              tr.appendChild(td);
+            }
+          );
           elements.body.appendChild(tr);
         });
       };

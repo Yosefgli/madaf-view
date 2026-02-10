@@ -1,5 +1,13 @@
-const SHEET_NAME = "מילוי מדף";
-const REQUIRED_HEADERS = ["ברקוד", "שם מוצר", "עמודה", "מדף", "סטטוס"];
+const SHEET_NAME = "TaskLines";
+const REQUIRED_HEADERS = [
+  "Barcode",
+  "ProductName",
+  "Qty",
+  "Shelf",
+  "WarehouseBin",
+  "Inventory",
+  "Checklist",
+];
 
 function doGet() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
@@ -34,29 +42,33 @@ function doGet() {
   const items = data
     .slice(1)
     .map((row) => {
-      const status = String(row[headerIndex["סטטוס"]] ?? "").trim();
+      const inventoryValue = String(row[headerIndex["Inventory"]] ?? "").trim();
+      const checklistValue = String(row[headerIndex["Checklist"]] ?? "").trim();
       return {
-        barcode: row[headerIndex["ברקוד"]] ?? "",
-        productName: row[headerIndex["שם מוצר"]] ?? "",
-        column: row[headerIndex["עמודה"]] ?? "",
-        shelf: row[headerIndex["מדף"]] ?? "",
-        isActive: isActiveStatus(status),
+        barcode: row[headerIndex["Barcode"]] ?? "",
+        productName: row[headerIndex["ProductName"]] ?? "",
+        qty: row[headerIndex["Qty"]] ?? "",
+        shelf: row[headerIndex["Shelf"]] ?? "",
+        warehouseBin: row[headerIndex["WarehouseBin"]] ?? "",
+        isChecklistEmpty: checklistValue === "",
+        isInventoryFalse: isInventoryValueFalse(inventoryValue),
       };
     })
-    .filter((item) => item.isActive)
+    .filter((item) => item.isChecklistEmpty)
     .map((item) => ({
       barcode: item.barcode,
       productName: item.productName,
-      column: item.column,
+      qty: item.qty,
       shelf: item.shelf,
+      warehouseBin: item.warehouseBin,
+      inventoryFlag: item.isInventoryFalse ? "FALSE" : "",
     }));
 
   return jsonResponse({ items });
 }
 
-function isActiveStatus(status) {
-  const normalized = String(status).trim().toLowerCase();
-  return ["פעיל", "כן", "true", "1", "active"].includes(normalized);
+function isInventoryValueFalse(value) {
+  return String(value).trim().toLowerCase() === "false";
 }
 
 function jsonResponse(payload) {
