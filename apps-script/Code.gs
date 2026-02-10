@@ -52,12 +52,10 @@ function doGet() {
         shelf: row[headerIndex["Shelf"]] ?? "",
         warehouseBin: row[headerIndex["WarehouseBin"]] ?? "",
         shouldShowByChecklist: isChecklistVisible(checklistRaw),
-        shouldIgnoreByInventory: isInventoryEmpty(inventoryRaw),
         isInventoryFalse: isInventoryValueFalse(inventoryRaw),
       };
     })
     .filter((item) => item.shouldShowByChecklist)
-    .filter((item) => !item.shouldIgnoreByInventory)
     .map((item) => ({
       barcode: item.barcode,
       productName: item.productName,
@@ -75,9 +73,6 @@ function isChecklistVisible(value) {
   return normalized === "" || normalized === "false";
 }
 
-function isInventoryEmpty(value) {
-  return String(value ?? "").trim() === "";
-}
 
 function isInventoryValueFalse(value) {
   return String(value ?? "").trim().toLowerCase() === "false";
