@@ -56,6 +56,7 @@ function doGet() {
       };
     })
     .filter((item) => item.shouldShowByChecklist)
+    .filter((item) => hasRowData(item))
     .map((item) => ({
       barcode: item.barcode,
       productName: item.productName,
@@ -68,11 +69,15 @@ function doGet() {
   return jsonResponse({ items });
 }
 
+function hasRowData(item) {
+  return [item.barcode, item.productName, item.qty, item.shelf, item.warehouseBin]
+    .some((value) => String(value ?? "").trim() !== "");
+}
+
 function isChecklistVisible(value) {
   const normalized = String(value ?? "").trim().toLowerCase();
   return normalized === "" || normalized === "false";
 }
-
 
 function isInventoryValueFalse(value) {
   return String(value ?? "").trim().toLowerCase() === "false";
